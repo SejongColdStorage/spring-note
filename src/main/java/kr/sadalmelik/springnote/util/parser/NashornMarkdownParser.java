@@ -13,6 +13,7 @@ public class NashornMarkdownParser implements MarkdownParser {
         try {
             parserEngine = new ScriptEngineManager().getEngineByName("nashorn");
             parserEngine.eval(new InputStreamReader(MarkdownParser.class.getClass().getResourceAsStream(COMMON_MARK_JS_PATH)));
+            parserEngine.eval("var reader = new commonmark.Parser(); var writer = new commonmark.HtmlRenderer();");
         } catch (ScriptException e) {
             throw new IllegalStateException("Cannot init markdown parser engine", e);
         }
@@ -23,7 +24,6 @@ public class NashornMarkdownParser implements MarkdownParser {
         String parsedHtml;
         try {
             parserEngine.eval(new InputStreamReader(this.getClass().getResourceAsStream("/commonmark/commonmark.js")));
-            parserEngine.eval("var reader = new commonmark.Parser(); var writer = new commonmark.HtmlRenderer();");
             parserEngine.eval("var parsed = reader.parse(\"" + markdown + "\")");
             parsedHtml = (String) parserEngine.eval("writer.render(parsed);");
         } catch (ScriptException e) {
