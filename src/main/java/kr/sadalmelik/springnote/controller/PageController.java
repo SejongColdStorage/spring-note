@@ -28,6 +28,7 @@ public class PageController {
 
     @RequestMapping("/note/{noteUrlPath}/{pageId}")
     public String viewPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId){
+        model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("pageList", pageRepository.findRootPage(noteUrlPath).getChildPages());
         model.addAttribute("pageContents", pageRepository.getOne(pageId));
 

@@ -3,8 +3,8 @@ package kr.sadalmelik.springnote.domain;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 
 @Entity
@@ -36,7 +36,8 @@ public class Page implements Comparable<Page> {
     private Page parentPage;
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "parentPage")
-    private Set<Page> childPages = new TreeSet<>();
+    @OrderBy("pageOrder asc")
+    private Set<Page> childPages = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "NOTE_ID")
