@@ -1,10 +1,10 @@
 package kr.sadalmelik.springnote.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 @Entity
@@ -13,12 +13,13 @@ public class Page implements Comparable<Page> {
     public Page() {
     }
 
-    public Page(String name, Integer pageOrder, Date modifiedDate, String parsedContents, String rawContents) {
+    public Page(String name, Note note, Integer pageOrder, Date modifiedDate, String parsedContents, String rawContents) {
         this.name = name;
         this.pageOrder = pageOrder;
         this.modifiedDate = modifiedDate;
         this.parsedContents = parsedContents;
         this.rawContents = rawContents;
+        this.note = note;
     }
 
     @Id
@@ -29,13 +30,17 @@ public class Page implements Comparable<Page> {
     private Integer pageOrder;
 
     // TODO 계층형구조 구현하기.
-//    //TODO Cascade 공부하기
-//    @ManyToOne
-//    @JoinColumn(name = "PARENT_ID")
-//    private Page parentPage;
-//
-//    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "parentPage")
-//    private Set<Page> childPages = new TreeSet<Page>();
+    //TODO Cascade 공부하기
+    @ManyToOne
+    @JoinColumn(name = "PARENT_ID")
+    private Page parentPage;
+
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "parentPage")
+    private Set<Page> childPages = new TreeSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "NOTE_ID")
+    private Note note;
 
     // TODO 아래는 PageContents 도메인으로 분리할 것.
     // PageHistory 도메인에도 아래의 내용이 공통적으로 사용될 예정.
@@ -44,7 +49,6 @@ public class Page implements Comparable<Page> {
     private Date modifiedDate;
     private String parsedContents;
     private String rawContents;
-
 
     public long getId() {
         return id;
@@ -92,6 +96,30 @@ public class Page implements Comparable<Page> {
 
     public void setRawContents(String rawContents) {
         this.rawContents = rawContents;
+    }
+
+    public Note getNote() {
+        return note;
+    }
+
+    public void setNote(Note note) {
+        this.note = note;
+    }
+
+    public Page getParentPage() {
+        return parentPage;
+    }
+
+    public void setParentPage(Page parentPage) {
+        this.parentPage = parentPage;
+    }
+
+    public Set<Page> getChildPages() {
+        return childPages;
+    }
+
+    public void setChildPages(Set<Page> childPages) {
+        this.childPages = childPages;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package kr.sadalmelik.springnote.controller;
 
 import kr.sadalmelik.springnote.domain.Page;
+import kr.sadalmelik.springnote.repository.NoteRepository;
 import kr.sadalmelik.springnote.repository.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,23 +16,33 @@ public class PageController {
     @Autowired
     PageRepository pageRepository;
 
-    @RequestMapping("/note/{pageId}")
-    public String viewPage(Model model, @PathVariable long pageId){
-        model.addAttribute("pageList", pageRepository.findAll());
+    @Autowired
+    NoteRepository noteRepository;
+
+
+    @RequestMapping("/note/{noteUrlPath}")
+    public String viewIndexPage(Model model, @PathVariable String noteUrlPath){
+        Page rootPage = pageRepository.findRootPage(noteUrlPath);
+        return viewPage(model, noteUrlPath, rootPage.getId());
+    }
+
+    @RequestMapping("/note/{noteUrlPath}/{pageId}")
+    public String viewPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId){
+        model.addAttribute("pageList", pageRepository.findRootPage(noteUrlPath).getChildPages());
         model.addAttribute("pageContents", pageRepository.getOne(pageId));
 
         return "page/view";
     }
 
-    @RequestMapping(value = "/note/{pageId}/edit", method= RequestMethod.GET )
-    public String viewEditPage(Model model, @PathVariable long pageId){
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/edit", method= RequestMethod.GET )
+    public String viewEditPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId){
         model.addAttribute("pageContents", pageRepository.getOne(pageId));
 
         return "page/edit";
     }
 
-    @RequestMapping(value = "/note/{pageId}/edit", method= RequestMethod.PUT )
-    public String editPage(Model model, @PathVariable long pageId){
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/edit", method= RequestMethod.PUT )
+    public String editPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId){
         // 기존 페이지를 가져온다.
         Page originalPage = pageRepository.getOne(pageId);
         // TODO 마크다운을 HTML로 변환한다.
