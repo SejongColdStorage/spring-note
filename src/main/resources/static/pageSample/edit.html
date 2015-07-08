@@ -31,9 +31,8 @@
         }
 
         .page-action {
-            background : lightgray;
+            background: lightgray;
         }
-
 
     </style>
 </head>
@@ -82,8 +81,13 @@
 
     <div class="page-action row">
         <div class="btn-group">
-            <button class="btn btn-default">Save</button>
-            <button class="btn btn-default">Cancel</button>
+            <button class="btn-save-page btn btn-default">
+                <span class="save-loading-icon hidden">
+                    <i class="fa fa-spinner fa-pulse"></i>
+                </span>
+                Save
+            </button>
+            <button class="btn-cancel-edit btn btn-default">Cancel</button>
         </div>
     </div>
 </div>
@@ -95,6 +99,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/mode-markdown.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.1.9/theme-chrome.js"></script>
 <script>
+    //init editor
     var editor = ace.edit("markdownEditor");
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/markdown");
