@@ -8,10 +8,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Index</title>
+    <title>Page Editor</title>
 
     <link href="//cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <style>
+    <style type="text/css" media="screen">
         html, body {
             overflow-x: hidden; /* Prevent scroll on narrow devices */
         }
@@ -22,6 +22,19 @@
 
         footer {
             padding: 30px 0;
+        }
+
+        #markdownEditor {
+            position: relative;
+            height: 500px;
+        }
+
+        .page-editor-wrapper {
+            border: 1px solid black;
+        }
+
+        .page-action {
+            background: lightgray;
         }
     </style>
 </head>
@@ -50,7 +63,6 @@
         <!-- /.nav-collapse -->
     </div>
     <!-- /.container -->
-
 </nav>
 <!-- /.navbar -->
 
@@ -75,31 +87,71 @@
 </nav>
 <!-- /.sidebar-->
 
-<article class="col-lg-10">
-
-    <div class="page-action row">
-        <div class="btn-group">
-            <a href="/note/${note.urlPath}/${page.id}/create" class="btn btn-default">Add Child Page</a>
-            <a href="/note/${note.urlPath}/${page.id}/modify" class="btn btn-default">Edit Page</a>
-            <a href="/note/${note.urlPath}/${page.id}/history" class="btn btn-default">Page History</a>
-            <a href="/note/${note.urlPath}/${page.id}/delete" class="btn btn-default">Delete Page</a>
-            <a href="/note/${note.urlPath}/${page.id}/move" class="btn btn-default">move</a>
-            <a href="/note/${note.urlPath}/${page.id}/info" class="btn btn-default">Page Info</a>
-        </div>
-    </div>
-
+<div class="container col-lg-10">
     <div class="page-contents-wrapper row">
         <h1 class="page-name">${page.contents.name}</h1>
 
-        <div class="page-contents">
-        ${page.contents.parsedContents}
-        </div>
+        <table class="table">
+            <thead>
+            <th>Version</th>
+            <th>Date</th>
+            <th>Comment</th>
+            <th colspan="2">Compare</th>
+            <th>Action</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>current</td>
+                <td>2015/04/11 09:15:09</td>
+                <td>add spring actuator part</td>
+                <td><input type="checkbox"/></td>
+                <td><input type="checkbox"/></td>
+                <td>
+                    <a>show</a>
+                    <a>revert</a>
+                </td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>2014/12/31 21:11:22</td>
+                <td></td>
+                <td><input type="checkbox"/></td>
+                <td><input type="checkbox"/></td>
+                <td>
+                    <a>show</a>
+                    <a>revert</a>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>2014/09/24 12:01:40</td>
+                <td></td>
+                <td><input type="checkbox"/></td>
+                <td><input type="checkbox"/></td>
+                <td>
+                    <a>show</a>
+                    <a>revert</a>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2014/03/10 21:11:22</td>
+                <td></td>
+                <td><input type="checkbox"/></td>
+                <td><input type="checkbox"/></td>
+                <td>
+                    <a>show</a>
+                    <a>revert</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-
-</article>
+</div>
 
 <script src="//cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js"></script>
 <script src="//cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>

@@ -25,13 +25,13 @@ public class PageController {
 
 
     @RequestMapping("/note/{noteUrlPath}")
-    public String viewIndexPage(Model model, @PathVariable String noteUrlPath){
+    public String viewIndexPage(Model model, @PathVariable String noteUrlPath) {
         Page rootPage = pageRepository.findRootPage(noteUrlPath);
         return "redirect:/note/" + noteUrlPath + "/" + rootPage.getId();
     }
 
     @RequestMapping("/note/{noteUrlPath}/{pageId}")
-    public String viewPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId){
+    public String viewPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId) {
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("pageList", pageRepository.findRootPage(noteUrlPath).getChildPages());
         model.addAttribute("page", pageRepository.getOne(pageId));
@@ -39,8 +39,8 @@ public class PageController {
         return "page/view";
     }
 
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/create", method= RequestMethod.GET )
-    public String viewCreatePage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId){
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/create", method = RequestMethod.GET)
+    public String viewCreatePage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId) {
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("page", new Page());
         model.addAttribute("editMode", "create");
@@ -49,13 +49,13 @@ public class PageController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/create", method= RequestMethod.POST )
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/create", method = RequestMethod.POST)
     public String saveNewPage(
             @PathVariable String noteUrlPath,
             @PathVariable long pageId,
             @RequestParam String name,
             @RequestParam String rawContents
-    ){
+    ) {
         Note note = noteRepository.findByUrlPath(noteUrlPath);
         Page parentPage = pageRepository.findOne(pageId);
 
@@ -74,8 +74,8 @@ public class PageController {
     }
 
 
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/modify", method= RequestMethod.GET )
-    public String viewEditPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId){
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/modify", method = RequestMethod.GET)
+    public String viewEditPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId) {
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("page", pageRepository.getOne(pageId));
         model.addAttribute("editMode", "modify");
@@ -83,13 +83,12 @@ public class PageController {
         return "page/edit";
     }
 
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/modify", method= RequestMethod.POST )
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/modify", method = RequestMethod.POST)
     @ResponseBody
     public String saveEditPage(@PathVariable String noteUrlPath,
                                @PathVariable long pageId,
                                @RequestParam String name,
-                               @RequestParam String rawContents
-    ){
+                               @RequestParam String rawContents) {
         Page currentPage = pageRepository.findOne(pageId);
         PageContents currentPageContents = currentPage.getContents();
         currentPageContents.setName(name);
@@ -100,6 +99,17 @@ public class PageController {
         pageRepository.save(currentPage);
 
         return "/note/" + currentPage.getNote().getUrlPath() + "/" + currentPage.getId();
+    }
+
+    @RequestMapping("/note/{noteUrlPath}/{pageId}/history")
+    public String viewHistoryPage(Model model,
+                                  @PathVariable String noteUrlPath,
+                                  @PathVariable long pageId) {
+        model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
+        model.addAttribute("pageList", pageRepository.findRootPage(noteUrlPath).getChildPages());
+        model.addAttribute("page", pageRepository.getOne(pageId));
+
+        return "page/history";
     }
 }
 
