@@ -67,7 +67,7 @@
         <ul>
         <#list pageList as page>
             <li>
-                <a href="/note/${note.urlPath}/${page.id}">${page.name}</a>
+                <a href="/note/${note.urlPath}/${page.id}">${page.contents.name}</a>
             </li>
         </#list>
         </ul>
@@ -80,7 +80,7 @@
     <div class="page-action row">
         <div class="btn-group">
             <a href="/note/${note.urlPath}/${page.id}/create" class="btn btn-default">Add Child Page</a>
-            <a href="/note/${note.urlPath}/${page.id}/edit" class="btn btn-default">Edit Page</a>
+            <a href="/note/${note.urlPath}/${page.id}/modify" class="btn btn-default">Edit Page</a>
             <a href="/note/${note.urlPath}/${page.id}/history" class="btn btn-default">Page History</a>
             <a href="/note/${note.urlPath}/${page.id}/delete" class="btn btn-default">Delete Page</a>
             <a href="/note/${note.urlPath}/${page.id}/move" class="btn btn-default">move</a>
@@ -89,10 +89,10 @@
     </div>
 
     <div class="page-contents-wrapper row">
-        <h1 class="page-name">${page.name}</h1>
+        <h1 class="page-name">${page.contents.name}</h1>
 
         <div class="page-contents">
-        ${page.parsedContents}
+        ${page.contents.parsedContents}
         </div>
     </div>
 

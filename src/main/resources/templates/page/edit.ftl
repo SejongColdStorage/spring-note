@@ -68,14 +68,13 @@
 
 <div class="container">
     <div class="page-contents row">
-        <div class="page-id hidden" attr-pageid="${page.id!}"></div>
         <div class="row page-name-wrapper">
-            <input type="text" class="page-name form-control input-lg" value="${page.name!}">
+            <input type="text" class="page-name form-control input-lg" value="${page.contents.name!}">
         </div>
         <hr>
         <div class="page-editor-wrapper">
-            <div class="editor-layer col-lg-6" id="markdownEditor">${page.rawContents!}</div>
-            <div class="preview-layer  col-lg-6">${page.parsedContents!}</div>
+            <div class="editor-layer col-lg-6" id="markdownEditor">${page.contents.rawContents!}</div>
+            <div class="preview-layer  col-lg-6">${page.contents.parsedContents!}</div>
         </div>
     </div>
 
@@ -105,10 +104,6 @@
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/markdown");
 
-    var editMode = function(){
-
-    }
-
     //event listener
     $(".btn-save-page").on("click", function () {
         // send data to server
@@ -117,26 +112,17 @@
         $(".btn-save-page").attr("disabled", "disabled");
 
         //TODO remove dependency with freemarker.
-        var url = "/note/${note.urlPath}/${page.id}";
+        var url = window.location.href;
         var pageData = {
             name: $(".page-name").val(),
-            parsedContents: editor.getSession().getValue()
+            rawContents: editor.getSession().getValue()
         };
 
-
-        if ($(".page-id").attr("data-pageId") === "") {
-            //if data-pageId == "", it means create new page;
-            url = url + "/create";
-        } else {
-            // else.. means modify page
-            url = url + "/modify";
-        }
-
         $.post(url, pageData).done(function (result) {
-            console.log(result);
+           location.href = result;
         }).error(function (result) {
             console.log(result);
-        }).always(function(){
+        }).always(function () {
             $(".save-loading-icon").addClass("hidden");
             $(".btn-save-page").removeAttr("disabled");
         })

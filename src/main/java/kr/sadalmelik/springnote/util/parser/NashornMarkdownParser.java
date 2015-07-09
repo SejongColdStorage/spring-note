@@ -23,7 +23,7 @@ public class NashornMarkdownParser implements MarkdownParser {
     public synchronized String parse(String markdown) {
         String parsedHtml;
         try {
-            parserEngine.eval(new InputStreamReader(this.getClass().getResourceAsStream("/commonmark/commonmark.js")));
+            markdown = markdown.replaceAll("\n", "\\\\n");
             parserEngine.eval("var parsed = reader.parse(\"" + markdown + "\")");
             parsedHtml = (String) parserEngine.eval("writer.render(parsed);");
         } catch (ScriptException e) {

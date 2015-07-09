@@ -14,12 +14,13 @@ public class Page implements Comparable<Page> {
     }
 
     public Page(String name, Note note, Integer pageOrder, Date modifiedDate, String parsedContents, String rawContents) {
-        this.name = name;
         this.pageOrder = pageOrder;
-        this.modifiedDate = modifiedDate;
-        this.parsedContents = parsedContents;
-        this.rawContents = rawContents;
         this.note = note;
+
+        this.contents.setName(name);
+        this.contents.setModifiedDate(modifiedDate);
+        this.contents.setParsedContents(parsedContents);
+        this.contents.setRawContents(rawContents);
     }
 
     @Id
@@ -30,7 +31,7 @@ public class Page implements Comparable<Page> {
     private Integer pageOrder;
 
     // TODO 계층형구조 구현하기.
-    //TODO Cascade 공부하기
+    // TODO Cascade 공부하기
     @ManyToOne
     @JoinColumn(name = "PARENT_ID")
     private Page parentPage;
@@ -43,13 +44,8 @@ public class Page implements Comparable<Page> {
     @JoinColumn(name = "NOTE_ID")
     private Note note;
 
-    // TODO 아래는 PageContents 도메인으로 분리할 것.
-    // PageHistory 도메인에도 아래의 내용이 공통적으로 사용될 예정.
-    @NotNull
-    private String name;
-    private Date modifiedDate;
-    private String parsedContents;
-    private String rawContents;
+    @Embedded
+    private PageContents contents = new PageContents();
 
     public long getId() {
         return id;
@@ -59,52 +55,12 @@ public class Page implements Comparable<Page> {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Integer getPageOrder() {
         return pageOrder;
     }
 
     public void setPageOrder(Integer pageOrder) {
         this.pageOrder = pageOrder;
-    }
-
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public String getParsedContents() {
-        return parsedContents;
-    }
-
-    public void setParsedContents(String parsedContents) {
-        this.parsedContents = parsedContents;
-    }
-
-    public String getRawContents() {
-        return rawContents;
-    }
-
-    public void setRawContents(String rawContents) {
-        this.rawContents = rawContents;
-    }
-
-    public Note getNote() {
-        return note;
-    }
-
-    public void setNote(Note note) {
-        this.note = note;
     }
 
     public Page getParentPage() {
@@ -123,14 +79,20 @@ public class Page implements Comparable<Page> {
         this.childPages = childPages;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Page{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", pageOrder=").append(pageOrder);
-        sb.append('}');
-        return sb.toString();
+    public Note getNote() {
+        return note;
+    }
+
+    public void setNote(Note note) {
+        this.note = note;
+    }
+
+    public PageContents getContents() {
+        return contents;
+    }
+
+    public void setContents(PageContents contents) {
+        this.contents = contents;
     }
 
     @Override
