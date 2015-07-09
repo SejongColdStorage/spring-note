@@ -39,17 +39,16 @@ public class PageController {
         return "page/view";
     }
 
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/create", method = RequestMethod.GET)
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/add", method = RequestMethod.GET)
     public String viewCreatePage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId) {
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("page", new Page());
-        model.addAttribute("editMode", "create");
 
         return "page/edit";
     }
 
     @ResponseBody
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/add", method = RequestMethod.POST)
     public String saveNewPage(
             @PathVariable String noteUrlPath,
             @PathVariable long pageId,
@@ -74,16 +73,15 @@ public class PageController {
     }
 
 
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/modify", method = RequestMethod.GET)
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/edit", method = RequestMethod.GET)
     public String viewEditPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId) {
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("page", pageRepository.getOne(pageId));
-        model.addAttribute("editMode", "modify");
 
         return "page/edit";
     }
 
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/modify", method = RequestMethod.POST)
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/edit", method = RequestMethod.POST)
     @ResponseBody
     public String saveEditPage(@PathVariable String noteUrlPath,
                                @PathVariable long pageId,

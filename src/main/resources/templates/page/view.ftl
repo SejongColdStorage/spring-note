@@ -79,8 +79,8 @@
 
     <div class="page-action row">
         <div class="btn-group">
-            <a href="/note/${note.urlPath}/${page.id}/create" class="btn btn-default">Add Child Page</a>
-            <a href="/note/${note.urlPath}/${page.id}/modify" class="btn btn-default">Edit Page</a>
+            <a href="/note/${note.urlPath}/${page.id}/add" class="btn btn-default">Add Child Page</a>
+            <a href="/note/${note.urlPath}/${page.id}/edit" class="btn btn-default">Edit Page</a>
             <a href="/note/${note.urlPath}/${page.id}/history" class="btn btn-default">Page History</a>
             <a href="/note/${note.urlPath}/${page.id}/delete" class="btn btn-default">Delete Page</a>
             <a href="/note/${note.urlPath}/${page.id}/move" class="btn btn-default">move</a>
