@@ -18,16 +18,18 @@ public class PageController {
 
     @Autowired
     PageRepository pageRepository;
+
     @Autowired
     NoteRepository noteRepository;
+
     @Autowired
     MarkdownParser markdownParser;
 
 
     @RequestMapping("/note/{noteUrlPath}")
-    public String viewIndexPage(Model model, @PathVariable String noteUrlPath) {
+    public String viewIndexPage(@PathVariable String noteUrlPath) {
         Page rootPage = pageRepository.findRootPage(noteUrlPath);
-        return "redirect:/note/" + noteUrlPath + "/" + rootPage.getId();
+        return String.format("redirect:/note/%s/%s", noteUrlPath, rootPage.getId());
     }
 
     @RequestMapping("/note/{noteUrlPath}/{pageId}")
@@ -69,7 +71,7 @@ public class PageController {
         pageRepository.save(parentPage);
         Page createdPage = pageRepository.save(page);
 
-        return "/note/" + note.getUrlPath() + "/" + createdPage.getId();
+        return String.format("/note/%s/%s", note.getUrlPath(), createdPage.getId());
     }
 
 
@@ -88,6 +90,7 @@ public class PageController {
                                @RequestParam String name,
                                @RequestParam String rawContents) {
         Page currentPage = pageRepository.findOne(pageId);
+
         PageContents currentPageContents = currentPage.getContents();
         currentPageContents.setName(name);
         currentPageContents.setModifiedDate(new Date());
@@ -96,7 +99,16 @@ public class PageController {
 
         pageRepository.save(currentPage);
 
-        return "/note/" + currentPage.getNote().getUrlPath() + "/" + currentPage.getId();
+        return String.format("/note/%s/%s", noteUrlPath, pageId);
+    }
+
+    // TODO POST일 경우에만 사용할 수 있도록 변경필요
+    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/delete")
+    public String deletePage(@PathVariable String noteUrlPath,
+                             @PathVariable long pageId) {
+        pageRepository.delete(pageId);
+
+        return String.format("redirect:/note/%s/%s", noteUrlPath, pageId);
     }
 
     @RequestMapping("/note/{noteUrlPath}/{pageId}/history")
@@ -109,5 +121,6 @@ public class PageController {
 
         return "page/history";
     }
+
 }
 

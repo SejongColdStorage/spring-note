@@ -1,90 +1,16 @@
-<!DOCTYPE html>
-<html lang="ko">
+<#import "./_pageListTemplate.ftl" as template>
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Index</title>
-
-    <link href="//cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        html, body {
-            overflow-x: hidden; /* Prevent scroll on narrow devices */
-        }
-
-        body {
-            padding-top: 70px;
-        }
-
-        footer {
-            padding: 30px 0;
-        }
-    </style>
-</head>
-
-<body>
-
-<nav class="navbar navbar-fixed-top navbar-inverse">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-        <!-- /.nav-collapse -->
-    </div>
-    <!-- /.container -->
-
-</nav>
-<!-- /.navbar -->
-
-<nav class="sidebar col-lg-2">
-    <div class="note-metadata">
-        <div>
-            <span>name :</span> ${note.name}
-        </div>
-        <div>
-            <span>author :</span> sejong park
-        </div>
-    </div>
-    <div class="page-list">
-        <ul>
-        <#list pageList as page>
-            <li>
-                <a href="/note/${note.urlPath}/${page.id}">${page.contents.name}</a>
-            </li>
-        </#list>
-        </ul>
-    </div>
-</nav>
-<!-- /.sidebar-->
-
+<#assign contents>
 <article class="col-lg-10">
 
     <div class="page-action row">
         <div class="btn-group">
-            <a href="/note/${note.urlPath}/${page.id}/add" class="btn btn-default">Add Child Page</a>
-            <a href="/note/${note.urlPath}/${page.id}/edit" class="btn btn-default">Edit Page</a>
-            <a href="/note/${note.urlPath}/${page.id}/history" class="btn btn-default">Page History</a>
-            <a href="/note/${note.urlPath}/${page.id}/delete" class="btn btn-default">Delete Page</a>
-            <a href="/note/${note.urlPath}/${page.id}/move" class="btn btn-default">move</a>
-            <a href="/note/${note.urlPath}/${page.id}/info" class="btn btn-default">Page Info</a>
+            <a href="/note/${note.urlPath}/${page.id}/add" class="btn-page-add btn btn-default">Add Child Page</a>
+            <a href="/note/${note.urlPath}/${page.id}/edit" class="btn-page-edit btn btn-default">Edit Page</a>
+            <a href="/note/${note.urlPath}/${page.id}/history" class="btn-page-history btn btn-default">Page History</a>
+            <a href="/note/${note.urlPath}/${page.id}/delete" class="btn-page-delete btn btn-default">Delete Page</a>
+            <a href="/note/${note.urlPath}/${page.id}/move" class="btn-page-move btn btn-default">move</a>
+            <a href="/note/${note.urlPath}/${page.id}/info" class="btn-page-info btn btn-default">Page Info</a>
         </div>
     </div>
 
@@ -95,11 +21,15 @@
         ${page.contents.parsedContents}
         </div>
     </div>
-
 </article>
+</#assign>
 
-<script src="//cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js"></script>
-<script src="//cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-</body>
+<script>
+    $(".btn-page-delete").on("click", function(e){
+        if(false === confirm("All data will be deleted. Are you sure you wish to proceed?")){
+            e.preventDefault();
+        }
+    });
+</script>
 
-</html>
+<@template.pageDefault title="${page.contents.name}" contents=contents/>
