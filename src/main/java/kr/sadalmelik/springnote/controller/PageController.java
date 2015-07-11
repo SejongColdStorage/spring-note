@@ -14,25 +14,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 
 @Controller
+@RequestMapping("/note/{noteUrlPath}")
 public class PageController {
-
     @Autowired
-    PageRepository pageRepository;
-
+    private PageRepository pageRepository;
     @Autowired
-    NoteRepository noteRepository;
-
+    private NoteRepository noteRepository;
     @Autowired
-    MarkdownParser markdownParser;
+    private MarkdownParser markdownParser;
 
-
-    @RequestMapping("/note/{noteUrlPath}")
+    @RequestMapping("/")
     public String viewIndexPage(@PathVariable String noteUrlPath) {
         Page rootPage = pageRepository.findRootPage(noteUrlPath);
         return String.format("redirect:/note/%s/%s", noteUrlPath, rootPage.getId());
     }
 
-    @RequestMapping("/note/{noteUrlPath}/{pageId}")
+    @RequestMapping("/{pageId}")
     public String viewPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId) {
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("pageList", pageRepository.findRootPage(noteUrlPath).getChildPages());
@@ -41,7 +38,7 @@ public class PageController {
         return "page/view";
     }
 
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/{pageId}/add", method = RequestMethod.GET)
     public String viewCreatePage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId) {
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("page", new Page());
@@ -49,8 +46,8 @@ public class PageController {
         return "page/edit";
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/add", method = RequestMethod.POST)
+    //TODO 리팩토링
+    @RequestMapping(value = "/{pageId}/add", method = RequestMethod.POST)
     public String saveNewPage(
             @PathVariable String noteUrlPath,
             @PathVariable long pageId,
@@ -64,18 +61,16 @@ public class PageController {
         page.setPageOrder(0);
         page.setParentPage(parentPage);
         page.setNote(note);
-        page.setContents(
-                new PageContents(name, new Date(), rawContents, markdownParser.parse(rawContents))
-        );
+        page.setContents(new PageContents(name, new Date(), rawContents, markdownParser.parse(rawContents)));
 
         pageRepository.save(parentPage);
         Page createdPage = pageRepository.save(page);
 
-        return String.format("/note/%s/%s", note.getUrlPath(), createdPage.getId());
+        return String.format("redirect:/note/%s/%s", note.getUrlPath(), createdPage.getId());
     }
 
 
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/edit", method = RequestMethod.GET)
+    @RequestMapping(value = "/{pageId}/edit", method = RequestMethod.GET)
     public String viewEditPage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId) {
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("page", pageRepository.getOne(pageId));
@@ -83,8 +78,8 @@ public class PageController {
         return "page/edit";
     }
 
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/edit", method = RequestMethod.POST)
-    @ResponseBody
+    //TODO URL 변경.
+    @RequestMapping(value = "/{pageId}/edit", method = RequestMethod.POST)
     public String saveEditPage(@PathVariable String noteUrlPath,
                                @PathVariable long pageId,
                                @RequestParam String name,
@@ -99,11 +94,11 @@ public class PageController {
 
         pageRepository.save(currentPage);
 
-        return String.format("/note/%s/%s", noteUrlPath, pageId);
+        return String.format("redirect:/note/%s/%s", noteUrlPath, pageId);
     }
 
     // TODO POST일 경우에만 사용할 수 있도록 변경필요
-    @RequestMapping(value = "/note/{noteUrlPath}/{pageId}/delete")
+    @RequestMapping(value = "/{pageId}/delete")
     public String deletePage(@PathVariable String noteUrlPath,
                              @PathVariable long pageId) {
         pageRepository.delete(pageId);
@@ -111,10 +106,11 @@ public class PageController {
         return String.format("redirect:/note/%s/%s", noteUrlPath, pageId);
     }
 
-    @RequestMapping("/note/{noteUrlPath}/{pageId}/history")
+    @RequestMapping("/{pageId}/history")
     public String viewHistoryPage(Model model,
                                   @PathVariable String noteUrlPath,
                                   @PathVariable long pageId) {
+        
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("pageList", pageRepository.findRootPage(noteUrlPath).getChildPages());
         model.addAttribute("page", pageRepository.getOne(pageId));

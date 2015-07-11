@@ -46,6 +46,13 @@
 
 </div>
 <!--/container -->
+
+
+<form class="form-page-edit hidden" method="post">
+    <input type="text" id="pageName" name="pageName">
+    <input type="text" id="pageRawConents" name="pageRawConents">
+</form>
+
 </#assign>
 
 <#assign script>
@@ -66,24 +73,14 @@
         $(".btn-save-page").attr("disabled", "disabled");
 
         //TODO remove dependency with freemarker.
-        var url = window.location.href;
-        var pageData = {
-            name: $(".page-name").val(),
-            rawContents: editor.getSession().getValue()
-        };
-
-        $.post(url, pageData).done(function (result) {
-            location.href = result;
-        }).error(function (result) {
-            console.log(result);
-        }).always(function () {
-            $(".save-loading-icon").addClass("hidden");
-            $(".btn-save-page").removeAttr("disabled");
-        })
+        $(".form-page-edit").attr("action", window.location.href);
+        $(".form-page-edit > name[pageName]").val($(".page-name").val());
+        $(".form-page-edit > name[pageRawConents]").val(editor.getSession().getValue());
+        $(".form-page-edit").submit();
     });
 
     $(".btn-cancel-edit").on("click", function () {
-
+        alert("not yet implements!!");
     });
 </script>
 </#assign>
