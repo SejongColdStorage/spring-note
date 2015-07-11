@@ -15,7 +15,7 @@ public class PageHistory {
     private Page page;
 
     @Embedded
-    private PageContents pageContents;
+    private PageContents contents;
 
     public long getId() {
         return id;
@@ -33,12 +33,12 @@ public class PageHistory {
         this.version = version;
     }
 
-    public PageContents getPageContents() {
-        return pageContents;
+    public PageContents getContents() {
+        return contents;
     }
 
-    public void setPageContents(PageContents pageContents) {
-        this.pageContents = pageContents;
+    public void setContents(PageContents contents) {
+        this.contents = contents;
     }
 
     public Page getPage() {

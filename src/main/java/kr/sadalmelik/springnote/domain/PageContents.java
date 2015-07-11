@@ -12,6 +12,7 @@ public class PageContents {
     private Date modifiedDate;
     private String parsedContents;
     private String rawContents;
+    private String editComment;
 
     public PageContents() {
     }
@@ -53,5 +54,13 @@ public class PageContents {
 
     public void setRawContents(String rawContents) {
         this.rawContents = rawContents;
+    }
+
+    public String getEditComment() {
+        return editComment;
+    }
+
+    public void setEditComment(String editComment) {
+        this.editComment = editComment;
     }
 }

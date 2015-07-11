@@ -4,6 +4,7 @@ import kr.sadalmelik.springnote.domain.Note;
 import kr.sadalmelik.springnote.domain.Page;
 import kr.sadalmelik.springnote.domain.PageContents;
 import kr.sadalmelik.springnote.repository.NoteRepository;
+import kr.sadalmelik.springnote.repository.PageHistoryRepository;
 import kr.sadalmelik.springnote.repository.PageRepository;
 import kr.sadalmelik.springnote.util.parser.MarkdownParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,12 @@ public class PageController {
     @Autowired
     private PageRepository pageRepository;
     @Autowired
+    private PageHistoryRepository pageHistoryRepository;
+    @Autowired
     private NoteRepository noteRepository;
     @Autowired
     private MarkdownParser markdownParser;
+
 
     @RequestMapping("/")
     public String viewIndexPage(@PathVariable String noteUrlPath) {
@@ -110,7 +114,7 @@ public class PageController {
     public String viewHistoryPage(Model model,
                                   @PathVariable String noteUrlPath,
                                   @PathVariable long pageId) {
-        
+
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
         model.addAttribute("pageList", pageRepository.findRootPage(noteUrlPath).getChildPages());
         model.addAttribute("page", pageRepository.getOne(pageId));

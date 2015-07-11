@@ -2,9 +2,7 @@ package kr.sadalmelik.springnote.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity
@@ -38,7 +36,11 @@ public class Page implements Comparable<Page> {
 
     @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "parentPage")
     @OrderBy("pageOrder asc")
-    private Set<Page> childPages = new HashSet<>();
+    private Set<Page> childPages = new TreeSet<>();
+
+    @OneToMany(mappedBy = "page", fetch = FetchType.LAZY)
+    @OrderBy("version desc")
+    private List<PageHistory> pageHistories = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "NOTE_ID")
@@ -93,6 +95,14 @@ public class Page implements Comparable<Page> {
 
     public void setContents(PageContents contents) {
         this.contents = contents;
+    }
+
+    public List<PageHistory> getPageHistories() {
+        return pageHistories;
+    }
+
+    public void setPageHistories(List<PageHistory> pageHistories) {
+        this.pageHistories = pageHistories;
     }
 
     @Override
