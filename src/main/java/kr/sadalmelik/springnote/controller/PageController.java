@@ -42,6 +42,19 @@ public class PageController {
         return "page/view";
     }
 
+    @RequestMapping("/{pageId}/ver/{version}")
+    public String viewPageByVersion(
+            Model model,
+            @PathVariable String noteUrlPath,
+            @PathVariable long pageId,
+            @PathVariable int version) {
+        model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));
+        model.addAttribute("pageList", pageRepository.findRootPage(noteUrlPath).getChildPages());
+        model.addAttribute("page", pageHistoryRepository.findByPageIdAndVersion(pageId, version));
+
+        return "page/view";
+    }
+
     @RequestMapping(value = "/{pageId}/add", method = RequestMethod.GET)
     public String viewCreatePage(Model model, @PathVariable String noteUrlPath, @PathVariable long pageId) {
         model.addAttribute("note", noteRepository.findByUrlPath(noteUrlPath));

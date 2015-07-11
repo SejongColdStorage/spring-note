@@ -5,4 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface PageHistoryRepository extends CrudRepository<PageHistory, Long>{
 
+    PageHistory findByPageIdAndVersion(long pageId, Integer version);
+
 }
